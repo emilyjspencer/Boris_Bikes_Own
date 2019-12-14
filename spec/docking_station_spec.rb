@@ -4,13 +4,24 @@ require 'bike'
 describe DockingStation do 
 
   describe '#initialize' do
-    it 'initializes with a capacity of 20' do 
-      expect(subject.capacity).to eq 20
+    it 'initializes with a capacity of 15' do 
+      docking_station = DockingStation.new(DockingStation::CAPACITY)
+      expect(docking_station.capacity).to eq DockingStation::CAPACITY
     end
 
     it 'initializes with no bikes in it' do
         expect(subject.bikes).to be_empty
     end 
+
+    it 'allows capacity to be changed when needed' do
+      subject.capacity = 12
+      expect(subject.capacity).to eq 12
+    end 
+
+    it 'has a default capacity of 20' do
+      expect(subject.capacity).to eq 20
+    end 
+
   end 
   
   describe '#release_bike' do
@@ -42,12 +53,9 @@ describe DockingStation do
     end 
 
     it 'raises an error if there is docking station is at capacity' do
-      20.times { subject.dock(Bike.new) }
+      15.times { subject.dock(Bike.new) }
       expect { subject.dock(Bike.new) }.to raise_error "Docking station full"
     end 
   end 
 
-# As a member of the public
-# So I can decide whether to use the docking station
-# I want to see a bike that has been docked
 end 
