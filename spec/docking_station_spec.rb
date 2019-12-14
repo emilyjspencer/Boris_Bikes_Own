@@ -2,6 +2,17 @@ require 'docking_station'
 require 'bike'
 
 describe DockingStation do 
+
+  describe '#initialize' do
+    it 'initializes with a capacity of 20' do 
+      expect(subject.capacity).to eq 20
+    end
+
+    it 'initializes with no bikes in it' do
+        expect(subject.bikes).to be_empty
+    end 
+  end 
+  
   describe '#release_bike' do
     it { is_expected.to respond_to(:release_bike).with(1).argument }
     
@@ -21,19 +32,18 @@ describe DockingStation do
   describe '#dock' do
     it 'docks a bike at the docking station' do
       bike = Bike.new
-      expect(subject.dock(bike)).to eq bike
-    end 
+      expect(subject.dock(bike)).to eq [bike]
+    end  
 
     it 'remembers the bike that has been docked' do
       bike = Bike.new 
       subject.dock(bike)
-      expect(subject.bike).to eq bike
+      expect(subject.bikes).to eq [bike] 
     end 
 
-    it 'raises an error if there is already a bike in the docking station' do
-      bike = Bike.new
-      subject.dock(bike)
-      expect { subject.dock(bike) }.to raise_error "Docking station full"
+    it 'raises an error if there is docking station is at capacity' do
+      20.times { subject.dock(Bike.new) }
+      expect { subject.dock(Bike.new) }.to raise_error "Docking station full"
     end 
   end 
 
