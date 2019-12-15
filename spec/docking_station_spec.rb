@@ -38,13 +38,22 @@ describe DockingStation do
       bike = Bike.new
       expect { subject.release_bike(bike) }.to raise_error "No bikes available"
     end 
+
+    it 'prevents a broken bike from being released' do
+      bike = Bike.new
+      subject.dock(bike)
+      bike.report_broken
+      bike.broken = true
+      expect { subject.release_bike(bike) }.to raise_error "Bike unavailable"
+    end 
+
   end
 
   describe '#dock' do
-    it 'docks a bike at the docking station' do
-      bike = Bike.new
-      expect(subject.dock(bike)).to eq [bike]
-    end  
+    # it 'docks a bike at the docking station' do
+      # bike = Bike.new
+      # expect(subject.dock(bike)).to eq [bike]
+    # end  
 
     it 'remembers the bike that has been docked' do
       bike = Bike.new 
@@ -56,6 +65,13 @@ describe DockingStation do
       15.times { subject.dock(Bike.new) }
       expect { subject.dock(Bike.new) }.to raise_error "Docking station full"
     end 
+
+    it 'accepts all bikes - broken or not' do
+      bike = Bike.new
+      bike.broken = true
+      expect(subject.dock(bike)).to eq "Bike has been returned"
+    end
+
   end 
 
 end 
